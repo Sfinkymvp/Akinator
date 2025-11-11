@@ -23,7 +23,8 @@ const char* error_messages[] = {
     GENERATE_ERROR_MESSAGE(TREE_PARENT_CHILD_MISMATCH, "Parent-child link mismatch"),
     GENERATE_ERROR_MESSAGE(TREE_INVALID_BRANCH_STRUCTURE, "Node has one child (must be 0 or 2)"),
     GENERATE_ERROR_MESSAGE(TREE_OUT_OF_MEMORY, "Failed to allocate memory"),
-    GENERATE_ERROR_MESSAGE(TREE_INPUT_READ_ERROR, "Failed to read user input")
+    GENERATE_ERROR_MESSAGE(TREE_INPUT_READ_ERROR, "Failed to read user input"),
+    GENERATE_ERROR_MESSAGE(TREE_OUTPUT_FILE_OPEN_ERROR, "Failed to write tree to the output file")
 };
 
 

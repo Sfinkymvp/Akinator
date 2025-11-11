@@ -33,6 +33,9 @@
 #endif // DEBUG
 
 
+#define RETURN_IF_NOT_OK(status) if (status != TREE_OK) return status
+
+
 TreeStatus treeVerify(BinaryTree* tree);
 
 
@@ -43,9 +46,6 @@ TreeStatus treeConstructor(BinaryTree* tree);
 
 
 void treeDestructor(BinaryTree* tree);
-
-
-void printTree(Node* node);
 
 
 #endif // _TREE_H_

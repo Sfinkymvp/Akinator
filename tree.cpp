@@ -118,6 +118,47 @@ static TreeStatus akinatorAddElement(Node* node, char* new_data, char* different
 }
 
 
+static TreeStatus readUserAnswer(char* buffer, int size)
+{
+    assert(buffer);
+
+    if (fgets(buffer, size, stdin) == NULL)
+        return TREE_INPUT_READ_ERROR;
+    buffer[strcspn(buffer, "\n")] = '\0';
+
+    return TREE_OK;
+}
+
+
+static TreeStatus processWrongGuess(Node* node)
+{
+    char answer_buffer[BUFFER_SIZE] = {};
+    char difference_buffer[BUFFER_SIZE] = {};
+
+    printf("What is it?\n");
+    TreeStatus status = readUserAnswer(answer_buffer, BUFFER_SIZE);
+    RETURN_IF_NOT_OK(status);
+
+    if (strcmp(node->data, UNKNOWN_STRING) == 0) {
+        free(node->data);
+        node->data = strdup(answer_buffer);
+        if (node->data == NULL)
+            return TREE_OUT_OF_MEMORY;
+
+        return TREE_RESTART;
+    }        
+
+    printf("How is %s different from %s\n", answer_buffer, node->data);
+    status = readUserAnswer(difference_buffer, BUFFER_SIZE);
+    RETURN_IF_NOT_OK(status);
+
+    status = akinatorAddElement(node, answer_buffer, difference_buffer);
+    RETURN_IF_NOT_OK(status);
+    
+    return TREE_RESTART;    
+}
+
+
 static TreeStatus akinatorGuessing(Node* node)
 {
     assert(node); assert(node->data);
@@ -125,45 +166,19 @@ static TreeStatus akinatorGuessing(Node* node)
     char answer_buffer[BUFFER_SIZE] = {};
 
     printf("Is this %s?\n", node->data);
-    if (fgets(answer_buffer, BUFFER_SIZE, stdin) == NULL)
-        return TREE_INPUT_READ_ERROR;
-    answer_buffer[strcspn(answer_buffer, "\n")] = '\0';
-
+    TreeStatus status = readUserAnswer(answer_buffer, BUFFER_SIZE);
+    RETURN_IF_NOT_OK(status);
+    
     if (strcmp(answer_buffer, "yes") == 0) {
         if (node->left == NULL)
             return TREE_OK;
         else
             return akinatorGuessing(node->left);
     } else {
-        if (node->right == NULL) {
-            printf("What is it?\n");
-            if (fgets(answer_buffer, BUFFER_SIZE, stdin) == NULL)
-                return TREE_INPUT_READ_ERROR;
-            answer_buffer[strcspn(answer_buffer, "\n")] = '\0';
-
-            if (strcmp(node->data, UNKNOWN_STRING) == 0) {
-                free(node->data);
-                node->data = strdup(answer_buffer);
-                if (node->data == NULL)
-                    return TREE_OUT_OF_MEMORY;
-
-                return TREE_RESTART;
-            }
-
-            printf("How is %s different from %s\n", answer_buffer, node->data);
-            char difference_buffer[BUFFER_SIZE] = {};
-            if (fgets(difference_buffer, BUFFER_SIZE, stdin) == NULL)
-                return TREE_INPUT_READ_ERROR;
-            difference_buffer[strcspn(difference_buffer, "\n")] = '\0';
-
-            TreeStatus status = akinatorAddElement(node, answer_buffer, difference_buffer);
-            if (status != TREE_OK)
-                return status;
-
-            return TREE_RESTART;
-        } else {
+        if (node->right == NULL)
+            return processWrongGuess(node);
+        else
             return akinatorGuessing(node->right);
-        }
     }
 }
 
@@ -236,17 +251,3 @@ void treeDestructor(BinaryTree* tree)
 }
 
 
-void printTree(Node* node)
-{
-    assert(node);
-
-    printf("(");
-
-    if (node->left)
-        printTree(node->left);
-    printf("%s", node->data);
-    if (node->right)
-        printTree(node->right);
-        
-    printf(")");
-}
