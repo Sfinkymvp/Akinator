@@ -1,26 +1,14 @@
 #include <stdio.h>
+#include <locale.h>
 
 
 #include "tree.h"
+#include "tree_test.h"
 
 
 int main()
 {
-    TREE_INIT(tree);
-    treeConstructor(&tree);
+    treeTest();
 
-    addElement(&tree, 4);
-
-    addElement(&tree, 3);
-    addElement(&tree, 2);
-    addElement(&tree, 1);
-    
-    addElement(&tree, 5);
-    addElement(&tree, 6);
-    addElement(&tree, 7);
-
-    printTree(&tree);
-
-    treeDestructor(&tree);
     return 0;
 }
