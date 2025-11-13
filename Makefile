@@ -23,7 +23,7 @@ $(OBJDIR):
 	@mkdir -p $(OBJDIR)
 
 
-FILES = $(OBJDIR)/main.o $(OBJDIR)/tree.o 
+FILES = $(OBJDIR)/main.o $(OBJDIR)/tree.o $(OBJDIR)/tree_io.o
 DEBUG_FILES = $(OBJDIR)/graph_generator.o $(OBJDIR)/html_builder.o $(OBJDIR)/tree_test.o
 OUTPUT_NAME = akinator
 
@@ -52,6 +52,10 @@ $(OBJDIR)/tree.o: tree.cpp | $(OBJDIR)
 	@g++ -c tree.cpp $(FLAGS) -o $(OBJDIR)/tree.o
 
 
+$(OBJDIR)/tree_io.o: tree_io.cpp | $(OBJDIR)
+	@g++ -c tree_io.cpp $(FLAGS) -o $(OBJDIR)/tree_io.o
+
+
 $(OBJDIR)/graph_generator.o: graph_generator.cpp | $(OBJDIR)
 	@g++ -c graph_generator.cpp $(FLAGS) -o $(OBJDIR)/graph_generator.o
 
@@ -62,3 +66,5 @@ $(OBJDIR)/html_builder.o: html_builder.cpp | $(OBJDIR)
 
 $(OBJDIR)/tree_test.o: tree_test.cpp | $(OBJDIR)
 	@g++ -c tree_test.cpp $(FLAGS) -o $(OBJDIR)/tree_test.o
+
+

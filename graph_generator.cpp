@@ -24,23 +24,23 @@ static void generateNode(Node* node, FILE* graph_file, int rank, int* counter)
                         node, node->data);
 
     if (node->left)  fprintf(graph_file, "%p", node->left);
-    else             fprintf(graph_file, "NULL");
+    else             fprintf(graph_file, "nil");
 
     fprintf(graph_file, " | <right>");
 
     if (node->right) fprintf(graph_file, "%p", node->right);
-    else             fprintf(graph_file, "NULL");
+    else             fprintf(graph_file, "nil");
 
     fprintf(graph_file, "}}\"];\n");
 
     if (node->left) {
-        fprintf(graph_file, "\tnode_%d:left -> node_%d:pointer [rank=%d];\n", 
+        fprintf(graph_file, "\tnode_%d:left -> node_%d:n [rank=%d];\n", 
                 id, *counter + 1, rank);
         generateNode(node->left, graph_file, rank + 1, counter);
     }
 
     if (node->right) {
-        fprintf(graph_file, "\tnode_%d:right -> node_%d:pointer [rank=%d];\n", 
+        fprintf(graph_file, "\tnode_%d:right -> node_%d:n [rank=%d];\n", 
                 id, *counter + 1, rank);
         generateNode(node->right, graph_file, rank + 1, counter);
     }
@@ -57,7 +57,7 @@ void generateGraph(BinaryTree* tree, const char* graph_filename)
 
     fprintf(graph_file, "digraph Tree {\n");
     fprintf(graph_file, "\trankdir=TB\n");
-    fprintf(graph_file, "\tgraph[splines=curved];\n");
+    fprintf(graph_file, "\tgraph[splines=line];\n");
 
     int counter = 0;
     int rank = 0;

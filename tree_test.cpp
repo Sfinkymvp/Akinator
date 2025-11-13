@@ -5,13 +5,16 @@
 #include "tree.h"
 
 
-void treeTest()
+TreeStatus treeTest()
 {
     TREE_INIT(tree);
-    treeConstructor(&tree);
+    TreeStatus status = treeConstructor(&tree);
+    REPORT_IF_NOT_OK(status);
 
-    akinatorStart(&tree);
-
+    status = akinatorStart(&tree);
+    REPORT_IF_NOT_OK(status);
+    
     treeDestructor(&tree);
+    return TREE_OK;
 }
 

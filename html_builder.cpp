@@ -13,21 +13,6 @@
 const char* DUMP_DIRECTORY = "images";
 
 
-const char* error_messages[] = {
-    GENERATE_ERROR_MESSAGE(TREE_OK, "Tree is valid"),
-    GENERATE_ERROR_MESSAGE(TREE_AGAIN, "Akinator will be restarted"),
-    GENERATE_ERROR_MESSAGE(TREE_ERR, "Tree is not valid"),
-    GENERATE_ERROR_MESSAGE(TREE_NULL_DATA_POINTER, "Node data is NULL"),
-    GENERATE_ERROR_MESSAGE(TREE_ROOT_HAS_PARENT, "Root node has parent (must be NULL)"),
-    GENERATE_ERROR_MESSAGE(TREE_MISSING_PARENT, "Node has no parent (must have)"),
-    GENERATE_ERROR_MESSAGE(TREE_PARENT_CHILD_MISMATCH, "Parent-child link mismatch"),
-    GENERATE_ERROR_MESSAGE(TREE_INVALID_BRANCH_STRUCTURE, "Node has one child (must be 0 or 2)"),
-    GENERATE_ERROR_MESSAGE(TREE_OUT_OF_MEMORY, "Failed to allocate memory"),
-    GENERATE_ERROR_MESSAGE(TREE_INPUT_READ_ERROR, "Failed to read user input"),
-    GENERATE_ERROR_MESSAGE(TREE_OUTPUT_FILE_OPEN_ERROR, "Failed to write tree to the output file")
-};
-
-
 static void convertDotToSvg(const char* dot_file, const char* svg_file)
 {
     assert(dot_file);
@@ -53,7 +38,7 @@ static void writeTreeInfo(BinaryTree* tree, DumpInfo* info)
     fprintf(tree->debug.dump.file, "\t<h2>Tree \"%s\" {%s:%d} created in %s()</h2>\n",
             tree->debug.creation.name, tree->debug.creation.file,
             tree->debug.creation.line, tree->debug.creation.function);
-    fprintf(tree->debug.dump.file, "\t<h3>ERROR:   %s</h3>\n", error_messages[info->status]);
+    fprintf(tree->debug.dump.file, "\t<h3>ERROR:   %s</h3>\n", status_messages[info->status]);
     fprintf(tree->debug.dump.file, "\t<h3>MESSAGE: %s</h3>\n", info->message);
 }
 

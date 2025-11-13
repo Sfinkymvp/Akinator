@@ -2,7 +2,10 @@
 #define _TREE_TEST_H_
 
 
-void treeTest();
+#include "tree.h"
+
+
+TreeStatus treeTest();
 
 
 #endif // _TREE_TEST_H_

@@ -3,7 +3,7 @@
 
 
 extern const char* UNKNOWN_STRING;
-extern const char* error_messages[];
+extern const char* status_messages[];
 
 
 const int BUFFER_SIZE = 256;
@@ -21,19 +21,14 @@ typedef enum {
     TREE_INVALID_BRANCH_STRUCTURE,
     TREE_OUT_OF_MEMORY,
     TREE_INPUT_READ_ERROR,
-    TREE_OUTPUT_FILE_OPEN_ERROR
+    TREE_INPUT_FILE_OPEN_ERROR,
+    TREE_INPUT_FILE_READ_ERROR,
+    TREE_INPUT_FILE_CLOSE_ERROR,
+    TREE_OUTPUT_FILE_OPEN_ERROR,
+    TREE_OUTPUT_FILE_WRITE_ERROR,
+    TREE_OUTPUT_FILE_CLOSE_ERROR,
+    TREE_INVALID_COUNT
 } TreeStatus;
-
-
-typedef struct Node Node;
-struct Node {
-    char* data;
-    Node* left;
-    Node* right;
-#ifdef DEBUG
-    Node* parent;
-#endif // DEBUG
-};
 
 
 #ifdef DEBUG
@@ -70,8 +65,22 @@ typedef struct {
 #endif // DEBUG
 
 
+typedef struct Node Node;
+struct Node {
+    char* data;
+    bool is_dynamic;
+    Node* left;
+    Node* right;
+#ifdef DEBUG
+    Node* parent;
+#endif // DEBUG
+};
+
+
 typedef struct {
     Node* root;
+    char* buffer;
+    int count;
 #ifdef DEBUG
     TreeDebugInfo debug;
 #endif // DEBUG
