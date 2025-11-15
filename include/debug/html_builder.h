@@ -2,7 +2,7 @@
 #define _HTML_BUILDER_H_
 
 
-#include "data.h"
+#include "../akinator/tree.h"
 
 
 void treeDump(BinaryTree* tree, TreeStatus status, const char* file, 

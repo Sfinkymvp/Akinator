@@ -2,7 +2,7 @@
 #define _STACK_DATA_H_
 
 
-#include "data.h"
+#include "../akinator/tree.h"
 
 
 /// Начальная емкость стека

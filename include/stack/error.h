@@ -2,7 +2,7 @@
 #define _STACK_ERROR_H_
 
 
-#include "stack_data.h"
+#include "./data.h"
 
 
 #ifdef DEBUG

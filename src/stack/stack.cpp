@@ -2,8 +2,8 @@
 #include <stdlib.h>
 #include <assert.h>
 
-#include "stack.h"
-#include "stack_error.h"
+#include "stack/stack.h"
+#include "stack/error.h"
 #ifdef HASH_ENABLED
 #include "stack_hash.h"
 #endif // HASH_ENABLED

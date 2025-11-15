@@ -5,9 +5,9 @@
 #include <assert.h>
 
 
-#include "html_builder.h"
-#include "data.h"
-#include "graph_generator.h"
+#include "debug/html_builder.h"
+#include "debug/graph_generator.h"
+#include "akinator/tree.h"
 
 
 const char* DUMP_DIRECTORY = "images";

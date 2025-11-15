@@ -2,8 +2,8 @@
 #define _STACK_H_
 
 
-#include "stack_data.h"
-#include "stack_error.h"
+#include "./data.h"
+#include "./error.h"
 
 
 #ifdef DEBUG

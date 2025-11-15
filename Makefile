@@ -17,15 +17,35 @@ FLAGS = -ggdb3 -std=c++17 -O0 \
 	-Wlarger-than=32768 -Wstack-usage=8192 -pie -fPIE -Werror=vla \
 	-fsanitize=address,alignment,bool,bounds,enum,float-cast-overflow,float-divide-by-zero,integer-divide-by-zero,leak,nonnull-attribute,null,object-size,return,returns-nonnull-attribute,shift,signed-integer-overflow,undefined,unreachable,vla-bound,vptr
 
+BUILDDIR = build
+OBJDIR = $(BUILDDIR)/obj
+SRCDIR = src
 
-OBJDIR = obj
-$(OBJDIR):
-	@mkdir -p $(OBJDIR)
+OBJDIR_AKINATOR = $(OBJDIR)/akinator
+OBJDIR_STACK = $(OBJDIR)/stack
+OBJDIR_DEBUG = $(OBJDIR)/debug
 
+SRCDIR_AKINATOR = $(SRCDIR)/akinator
+SRCDIR_STACK = $(SRCDIR)/stack
+SRCDIR_DEBUG = $(SRCDIR)/debug
 
-FILES = $(OBJDIR)/main.o $(OBJDIR)/tree.o $(OBJDIR)/tree_io.o $(OBJDIR)/tree_comparison.o \
-    $(OBJDIR)/akinator_menu.o $(OBJDIR)/stack.o $(OBJDIR)/stack_error.o
-DEBUG_FILES = $(OBJDIR)/graph_generator.o $(OBJDIR)/html_builder.o
+OUTPUTDIR = build
+
+$(OBJDIR_AKINATOR):
+	@mkdir -p $(OBJDIR_AKINATOR)
+
+$(OBJDIR_STACK):
+	@mkdir -p $(OBJDIR_STACK)
+
+$(OBJDIR_DEBUG):
+	@mkdir -p $(OBJDIR_DEBUG)
+
+FILES = $(OBJDIR_AKINATOR)/main.o $(OBJDIR_AKINATOR)/tree.o $(OBJDIR_AKINATOR)/io.o \
+    $(OBJDIR_AKINATOR)/comparison.o $(OBJDIR_AKINATOR)/menu.o \
+    $(OBJDIR_STACK)/stack.o $(OBJDIR_STACK)/error.o
+DEBUG_FILES = $(OBJDIR_DEBUG)/graph_generator.o $(OBJDIR_DEBUG)/html_builder.o
+FLAGS += -Iinclude
+
 OUTPUT_NAME = akinator
 
 
@@ -34,48 +54,52 @@ clean:
 	@rm -rf $(OBJDIR)
 
 
+run:
+	@cd $(BUILDDIR) && ./$(OUTPUT_NAME)
+
+
 debug: FLAGS += -DDEBUG
 
 
 debug: $(FILES) $(DEBUG_FILES)
-	@g++ $(FILES) $(DEBUG_FILES) $(FLAGS) -o $(OUTPUT_NAME)
+	@g++ $(FILES) $(DEBUG_FILES) $(FLAGS) -o $(OUTPUTDIR)/$(OUTPUT_NAME)
 
 
 release: $(FILES)
 	@g++ $(FILES) $(FLAGS) -o $(OUTPUT_NAME)
 
 
-$(OBJDIR)/main.o: main.cpp | $(OBJDIR)
-	@g++ -c main.cpp $(FLAGS) -o $(OBJDIR)/main.o
+$(OBJDIR_AKINATOR)/main.o: $(SRCDIR_AKINATOR)/main.cpp | $(OBJDIR_AKINATOR)
+	@g++ -c $(SRCDIR_AKINATOR)/main.cpp $(FLAGS) -o $(OBJDIR_AKINATOR)/main.o
 
 
-$(OBJDIR)/tree.o: tree.cpp | $(OBJDIR)
-	@g++ -c tree.cpp $(FLAGS) -o $(OBJDIR)/tree.o
+$(OBJDIR_AKINATOR)/tree.o: $(SRCDIR_AKINATOR)/tree.cpp | $(OBJDIR_AKINATOR)
+	@g++ -c $(SRCDIR_AKINATOR)/tree.cpp $(FLAGS) -o $(OBJDIR_AKINATOR)/tree.o
 
 
-$(OBJDIR)/tree_io.o: tree_io.cpp | $(OBJDIR)
-	@g++ -c tree_io.cpp $(FLAGS) -o $(OBJDIR)/tree_io.o
+$(OBJDIR_AKINATOR)/io.o: $(SRCDIR_AKINATOR)/io.cpp | $(OBJDIR_AKINATOR)
+	@g++ -c $(SRCDIR_AKINATOR)/io.cpp $(FLAGS) -o $(OBJDIR_AKINATOR)/io.o
 
 
-$(OBJDIR)/graph_generator.o: graph_generator.cpp | $(OBJDIR)
-	@g++ -c graph_generator.cpp $(FLAGS) -o $(OBJDIR)/graph_generator.o
+$(OBJDIR_AKINATOR)/comparison.o: $(SRCDIR_AKINATOR)/comparison.cpp | $(OBJDIR_AKINATOR)
+	@g++ -c $(SRCDIR_AKINATOR)/comparison.cpp $(FLAGS) -o $(OBJDIR_AKINATOR)/comparison.o
 
 
-$(OBJDIR)/html_builder.o: html_builder.cpp | $(OBJDIR)
-	@g++ -c html_builder.cpp $(FLAGS) -o $(OBJDIR)/html_builder.o
+$(OBJDIR_AKINATOR)/menu.o: $(SRCDIR_AKINATOR)/menu.cpp | $(OBJDIR_AKINATOR)
+	@g++ -c $(SRCDIR_AKINATOR)/menu.cpp $(FLAGS) -o $(OBJDIR_AKINATOR)/menu.o
 
 
-$(OBJDIR)/tree_comparison.o: tree_comparison.cpp | $(OBJDIR)
-	@g++ -c tree_comparison.cpp $(FLAGS) -o $(OBJDIR)/tree_comparison.o
+$(OBJDIR_STACK)/stack.o: $(SRCDIR_STACK)/stack.cpp | $(OBJDIR_STACK)
+	@g++ -c $(SRCDIR_STACK)/stack.cpp $(FLAGS) -o $(OBJDIR_STACK)/stack.o
 
 
-$(OBJDIR)/akinator_menu.o: akinator_menu.cpp | $(OBJDIR)
-	@g++ -c akinator_menu.cpp $(FLAGS) -o $(OBJDIR)/akinator_menu.o
+$(OBJDIR_STACK)/error.o: $(SRCDIR_STACK)/error.cpp | $(OBJDIR_STACK)
+	@g++ -c $(SRCDIR_STACK)/error.cpp $(FLAGS) -o $(OBJDIR_STACK)/error.o
 
 
-$(OBJDIR)/stack.o: stack.cpp | $(OBJDIR)
-	@g++ -c stack.cpp $(FLAGS) -o $(OBJDIR)/stack.o
+$(OBJDIR_DEBUG)/graph_generator.o: $(SRCDIR_DEBUG)/graph_generator.cpp | $(OBJDIR_DEBUG)
+	@g++ -c $(SRCDIR_DEBUG)/graph_generator.cpp $(FLAGS) -o $(OBJDIR_DEBUG)/graph_generator.o
 
 
-$(OBJDIR)/stack_error.o: stack_error.cpp | $(OBJDIR)
-	@g++ -c stack_error.cpp $(FLAGS) -o $(OBJDIR)/stack_error.o
+$(OBJDIR_DEBUG)/html_builder.o: $(SRCDIR_DEBUG)/html_builder.cpp | $(OBJDIR_DEBUG)
+	@g++ -c $(SRCDIR_DEBUG)/html_builder.cpp $(FLAGS) -o $(OBJDIR_DEBUG)/html_builder.o

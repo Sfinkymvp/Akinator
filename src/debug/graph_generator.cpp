@@ -4,8 +4,8 @@
 #include <assert.h>
 
 
-#include "graph_generator.h"
-#include "data.h"
+#include "debug/graph_generator.h"
+#include "akinator/tree.h"
 
 
 static void generateNode(Node* node, FILE* graph_file, int rank, int* counter)

@@ -2,7 +2,7 @@
 #define _GRAPH_GENERATOR_H_
 
 
-#include "data.h"
+#include "../akinator/tree.h"
 
 
 void generateGraph(BinaryTree* tree, const char* graph_filename);
