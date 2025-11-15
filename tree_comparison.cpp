@@ -15,61 +15,77 @@ static TreeStatus findPathToNode(Node* node, Stack_t* stack, const char* data)
     if (node == NULL)
         return TREE_NOT_FOUND;
     if (strcmp(node->data, data) == 0) {
-        stackPush(stack, node);
+            stackPush(stack, (PathStep){node, ANSWER_NONE});
         return TREE_OK;
     }
 
     TreeStatus status = findPathToNode(node->left, stack, data);
     if (status == TREE_OK) {
-        stackPush(stack, node);
+        stackPush(stack, (PathStep){node, ANSWER_YES});
         return TREE_OK;
     }
     
     status = findPathToNode(node->right, stack, data);
     if (status == TREE_OK) {
-        stackPush(stack, node);
+        stackPush(stack, (PathStep){node, ANSWER_NO});
         return TREE_OK;
     }
 
     return TREE_NOT_FOUND;
 }
 
+
+static void printGeneralProperties(Stack_t* object_path_1, Stack_t* object_path_2)
+{
+    assert(object_path_1); assert(object_path_2);
+    assert(object_path_1->data); assert(object_path_2->data);
+
+    PathStep step_1 = {};
+    PathStep step_2 = {};
+    stackPop(object_path_1, &step_1);
+    stackPop(object_path_2, &step_2);
+
+    while (step_1.node == step_2.node && step_1.answer == step_2.answer) {
+        printf("%s\n", step_1.node->data);
+        if (step_1.answer != ANSWER_NONE && step_2.answer != ANSWER_NONE) {
+            stackPop(object_path_1, &step_1);
+            stackPop(object_path_2, &step_2);
+        } else
+            break;
+    }
+}
+static void printUniqueProperties(Stack_t* object_path)
+{
+    assert(object_path); assert(object_path->data);
+
+    PathStep step = {};
+    stackPop(object_path, &step);
+
+    while (step.answer != ANSWER_NONE) {
+        assert(step.answer != ANSWER_YES || step.answer != ANSWER_NO);
+        if (step.answer == ANSWER_YES)
+            printf("%s\n", step.node->data);
+        else
+            printf("not %s\n", step.node->data);
+
+        stackPop(object_path, &step);
+    }
+}
+
+
 static void printNodesComparision(Stack_t* object_path_1, Stack_t* object_path_2)
 {
     assert(object_path_1); assert(object_path_2);
     assert(object_path_1->data); assert(object_path_2->data);
 
-    
-    Node* node_1 = NULL;
-    Node* node_2 = NULL;
-    stackPop(object_path_1, &node_1);
-    stackPop(object_path_2, &node_2);
-
     printf("What both nodes have in common:\n");
-    while (node_1 == node_2) {
-        printf("%s\n", node_1->data);
-        if (object_path_1->size != 0 && object_path_2->size != 0) {
-            stackPop(object_path_1, &node_1);
-            stackPop(object_path_2, &node_2);
-        } else
-            return;
-    }
-    
+    printGeneralProperties(object_path_1, object_path_2);
+
     printf("\nProperties of 1 node:\n");        
-    while (object_path_1->size > 1) {
-        printf("%s\n", node_1->data);
-        stackPop(object_path_1, &node_1);
-    }
-    stackPop(object_path_1, &node_1);
-    printf("And finally, its name: %s\n", node_1->data);
+    printUniqueProperties(object_path_1);
 
     printf("\nProperties of 2 node:\n");
-    while (object_path_2->size > 1) {
-        printf("%s\n", node_2->data);
-        stackPop(object_path_2, &node_2);
-    }
-    stackPop(object_path_2, &node_2);
-    printf("And finally, its name: %s\n", node_2->data);
+    printUniqueProperties(object_path_2);
 }
 
 
@@ -94,6 +110,27 @@ TreeStatus compareNodes(BinaryTree* tree, const char* data_1, const char* data_2
 
     stackDtor(&stack_1);
     stackDtor(&stack_2);
+    return TREE_OK;
+}
+
+
+TreeStatus defineNode(BinaryTree* tree, const char* data)
+{
+    assert(tree); assert(data);
+
+    Stack_t stack = {};
+    stackCtor(&stack, START_CAPACITY);
+
+    TreeStatus status = findPathToNode(tree->root, &stack, data);
+    if (status != TREE_OK) {
+        stackDtor(&stack);
+        return status;
+    }
+
+    printf("Node '%s' definition:\n", data);
+    printUniqueProperties(&stack);
+    
+    stackDtor(&stack);
     return TREE_OK;
 }
 

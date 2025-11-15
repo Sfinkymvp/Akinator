@@ -3,6 +3,7 @@
 
 
 #include "data.h"
+#include "akinator_menu.h"
 #include "tree_io.h"
 #include "tree_comparison.h"
 
@@ -42,19 +43,13 @@
 #define RETURN_IF_NOT_OK(_status) if (_status != TREE_OK) return _status
 
 
-#define REPORT_IF_NOT_OK(_status)                      \
-    do {                                               \
-        if (_status != TREE_OK) {                      \
-            printStatusMessage(_status);               \
-            return _status;                            \
-        }                                              \
-    } while (0)
-
-
 void printStatusMessage(TreeStatus status);
 
 
 TreeStatus treeVerify(BinaryTree* tree);
+
+
+TreeStatus readUserAnswer(char* buffer, int size);
 
 
 TreeStatus akinatorStart(BinaryTree* tree);
@@ -66,7 +61,7 @@ TreeStatus createNode(Node** node);
 TreeStatus treeConstructor(BinaryTree* tree, const int argc, const char** argv);
 
 
-TreeStatus treeDestructor(BinaryTree* tree);
+void treeDestructor(BinaryTree* tree);
 
 
 #endif // _TREE_H_

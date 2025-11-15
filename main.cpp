@@ -3,22 +3,36 @@
 
 
 #include "tree.h"
-#include "tree_test.h"
 
 
 int main(const int argc, const char** argv)
 {
     TREE_INIT(tree);
+    int exit_code = 0;
+
     TreeStatus status = treeConstructor(&tree, argc, argv);
-    REPORT_IF_NOT_OK(status);
+    if (status != TREE_OK) {
+        printStatusMessage(status);
+        exit_code = 1;
+    }
 
-    status = akinatorStart(&tree);
-    REPORT_IF_NOT_OK(status);
+    if (exit_code == 0) {
+        printf("Hello, I'm akinator!\n");
+      
+        UserChoice choice = 0;
+        while (choice != CHOICE_EXIT_SAVE && choice != CHOICE_EXIT_NO_SAVE) {
+            choice = parseUserChoice();
 
-    compareNodes(&tree, "Egor", "Sasha");
+            status = processUserChoice(&tree, choice);
+            if (status != TREE_OK) {
+                printStatusMessage(status);
+                exit_code = 1;
+                break;
+            }
+        }
+    }
 
-    status = treeDestructor(&tree);
-    REPORT_IF_NOT_OK(status);
-
-    return 0;
+    printf("Akinator says goodbye!\n");
+    treeDestructor(&tree);
+    return exit_code;
 }

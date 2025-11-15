@@ -90,10 +90,8 @@ TreeStatus treeLoadFromDisk(BinaryTree* tree)
     }
 
     size_t file_size = getFileSize(tree->args.input_file); 
-    if (file_size == 0) {
-        printf("TREE FILE IS EMPTY. IT WILL BE EMPTY\n");
+    if (file_size == 0)
         return TREE_OK;
-    }
 
     tree->buffer = (char*)calloc(file_size + 1, 1);
     if (tree->buffer == NULL) {
@@ -157,7 +155,8 @@ static TreeStatus parseNode(BinaryTree* tree, Node** node, int* position)
 {
     assert(tree); assert(tree->buffer); assert(node); assert(position);
     assert(*node == NULL);
-    
+  
+    TreeStatus status = createNode(node);
     RETURN_IF_NOT_OK(status);
     (*position)++;
 

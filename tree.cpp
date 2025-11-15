@@ -30,7 +30,8 @@ const char* status_messages[] = {
     GENERATE_STATUS_MESSAGE(TREE_OUTPUT_FILE_WRITE_ERROR, "Failed to write to output file"),
     GENERATE_STATUS_MESSAGE(TREE_OUTPUT_FILE_CLOSE_ERROR, "Failed to close output file"),
     GENERATE_STATUS_MESSAGE(TREE_INVALID_COUNT, "Invalid objects count"),
-    GENERATE_STATUS_MESSAGE(TREE_UNKNOWN_CMD_ARGUMENTS, "Unknown command line arguments")
+    GENERATE_STATUS_MESSAGE(TREE_UNKNOWN_CMD_ARGUMENTS, "Unknown command line arguments"),
+    GENERATE_STATUS_MESSAGE(TREE_INVALID_USER_CHOICE, "Invalid user choice value")
 
 };
 
@@ -104,6 +105,8 @@ TreeStatus treeVerify(BinaryTree* tree)
         return TREE_ROOT_HAS_PARENT;
     if (tree->root->data == NULL)
         return TREE_NULL_DATA_POINTER;
+    if ((tree->root->left == NULL) ^ (tree->root->right == NULL))
+        return TREE_INVALID_BRANCH_STRUCTURE;
 
     if (tree->root->left) {
         status = nodeVerify(tree, tree->root->left);
@@ -156,7 +159,7 @@ static TreeStatus akinatorAddElement(BinaryTree* tree, Node* node, char* new_dat
 }
 
 
-static TreeStatus readUserAnswer(char* buffer, int size)
+TreeStatus readUserAnswer(char* buffer, int size)
 {
     assert(buffer);
 
@@ -174,6 +177,7 @@ static TreeStatus readUserAnswer(char* buffer, int size)
     return TREE_OK;
 }
 
+
 static TreeStatus processWrongGuess(BinaryTree* tree, Node* node)
 {
     assert(tree); assert(node);
@@ -189,10 +193,11 @@ static TreeStatus processWrongGuess(BinaryTree* tree, Node* node)
         if (node->is_dynamic)
             free(node->data);
         node->data = strdup(answer_buffer);
+        node->is_dynamic = true;
         if (node->data == NULL)
             return TREE_OUT_OF_MEMORY;
 
-        return TREE_RESTART;
+        return TREE_OK;
     }        
 
     printf("How is '%s' different from '%s'?\n", answer_buffer, node->data);
@@ -202,7 +207,7 @@ static TreeStatus processWrongGuess(BinaryTree* tree, Node* node)
     status = akinatorAddElement(tree, node, answer_buffer, difference_buffer);
     RETURN_IF_NOT_OK(status);
     
-    return TREE_RESTART;    
+    return TREE_OK;
 }
 
 
@@ -266,10 +271,7 @@ TreeStatus akinatorStart(BinaryTree* tree)
     TREE_VERIFY(tree, "Before starting the akinator");
 
     status = akinatorGuessing(tree, tree->root);
-    if (status == TREE_RESTART)
-        return akinatorStart(tree);
-    else
-        return status;
+    return status;
 }
 
 
@@ -309,18 +311,16 @@ TreeStatus treeConstructor(BinaryTree* tree, const int argc, const char** argv)
 }
 
 
-TreeStatus treeDestructor(BinaryTree* tree)
+void treeDestructor(BinaryTree* tree)
 {
     assert(tree);
-    
-    TreeStatus status = treeWriteToDisk(tree);
-    RETURN_IF_NOT_OK(status);
+
+    fclose(tree->debug.dump.file);
+    tree->debug.dump.file = NULL;
 
     if (tree->root == NULL)
-        return TREE_OK;
+        return;
     free(tree->buffer); 
     deleteBranch(tree->root);
     tree->root = NULL;
-
-    return TREE_OK;
 }

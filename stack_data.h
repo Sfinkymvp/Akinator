@@ -10,9 +10,7 @@ const int START_CAPACITY = 3;
 
 
 /// Тип данных в стеке
-typedef Node* Element_t;
-/// Спецификатор типа данных 
-#define SPEC "%p"
+typedef PathStep Element_t;
 
 
 /// Зеленый цвет для вывода в поток

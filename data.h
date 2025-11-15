@@ -30,8 +30,25 @@ typedef enum {
     TREE_OUTPUT_FILE_WRITE_ERROR,
     TREE_OUTPUT_FILE_CLOSE_ERROR,
     TREE_INVALID_COUNT,
-    TREE_UNKNOWN_CMD_ARGUMENTS
+    TREE_UNKNOWN_CMD_ARGUMENTS,
+    TREE_INVALID_USER_CHOICE
 } TreeStatus;
+
+
+typedef enum {
+    CHOICE_GUESS = 0,
+    CHOICE_DEFINE,
+    CHOICE_COMPARE,
+    CHOICE_EXIT_SAVE,
+    CHOICE_EXIT_NO_SAVE
+} UserChoice;
+
+
+typedef enum {
+    ANSWER_YES = 0,
+    ANSWER_NO,
+    ANSWER_NONE
+} AnswerType;
 
 
 #ifdef DEBUG
@@ -84,6 +101,12 @@ struct Node {
     Node* parent;
 #endif // DEBUG
 };
+
+
+typedef struct {
+    Node* node;
+    AnswerType answer;
+} PathStep;
 
 
 typedef struct {

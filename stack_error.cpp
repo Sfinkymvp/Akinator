@@ -192,7 +192,7 @@ void printStackData(const Stack_t* stack)
 
     size_t index = 0;
     for (; index < stack->size; index++)
-        fprintf(stderr, "\t*[%zu] = " SPEC"\n", index, stack->data[index]);
+        fprintf(stderr, "\t*[%zu] = %p\n", index, &stack->data[index]);
 
 #ifdef POISON
     for (; index < stack->capacity; index++) {

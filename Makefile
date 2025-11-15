@@ -24,8 +24,8 @@ $(OBJDIR):
 
 
 FILES = $(OBJDIR)/main.o $(OBJDIR)/tree.o $(OBJDIR)/tree_io.o $(OBJDIR)/tree_comparison.o \
-    $(OBJDIR)/stack.o $(OBJDIR)/stack_error.o
-DEBUG_FILES = $(OBJDIR)/graph_generator.o $(OBJDIR)/html_builder.o $(OBJDIR)/tree_test.o
+    $(OBJDIR)/akinator_menu.o $(OBJDIR)/stack.o $(OBJDIR)/stack_error.o
+DEBUG_FILES = $(OBJDIR)/graph_generator.o $(OBJDIR)/html_builder.o
 OUTPUT_NAME = akinator
 
 
@@ -65,12 +65,12 @@ $(OBJDIR)/html_builder.o: html_builder.cpp | $(OBJDIR)
 	@g++ -c html_builder.cpp $(FLAGS) -o $(OBJDIR)/html_builder.o
 
 
-$(OBJDIR)/tree_test.o: tree_test.cpp | $(OBJDIR)
-	@g++ -c tree_test.cpp $(FLAGS) -o $(OBJDIR)/tree_test.o
-
-
 $(OBJDIR)/tree_comparison.o: tree_comparison.cpp | $(OBJDIR)
 	@g++ -c tree_comparison.cpp $(FLAGS) -o $(OBJDIR)/tree_comparison.o
+
+
+$(OBJDIR)/akinator_menu.o: akinator_menu.cpp | $(OBJDIR)
+	@g++ -c akinator_menu.cpp $(FLAGS) -o $(OBJDIR)/akinator_menu.o
 
 
 $(OBJDIR)/stack.o: stack.cpp | $(OBJDIR)
