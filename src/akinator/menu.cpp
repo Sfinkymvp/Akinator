@@ -88,7 +88,7 @@ TreeStatus akinatorCompare(BinaryTree* tree)
         return TREE_OK;
     }
 
-    return TREE_OK;
+    return status;
 }
 
 

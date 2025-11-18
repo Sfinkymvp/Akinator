@@ -54,19 +54,23 @@ static TreeStatus printGeneralProperties(Stack_t* object_path_1, Stack_t* object
     error = stackPop(object_path_2, &step_2);
     RETURN_IF_STACK_ERROR(error);
 
+    printf("They both ");
     while (step_1.node == step_2.node && step_1.answer == step_2.answer) {
         if (step_1.answer == ANSWER_YES)
-            printf(WHITE("%s\n"), step_1.node->data);
+            printf(WHITE("%s"), step_1.node->data);
         else
-            printf(WHITE("not %s\n"), step_1.node->data);
+            printf(WHITE("not %s"), step_1.node->data);
         if (step_1.answer != ANSWER_NONE && step_2.answer != ANSWER_NONE) {
             error = stackPop(object_path_1, &step_1);
             RETURN_IF_STACK_ERROR(error);
             error = stackPop(object_path_2, &step_2);
             RETURN_IF_STACK_ERROR(error);
-        } else
+            printf(", ");
+        } else {
             break;
+        }
     }
+    printf(". ");
 
     error = stackPush(object_path_1, step_1);
     RETURN_IF_STACK_ERROR(error);
@@ -77,7 +81,7 @@ static TreeStatus printGeneralProperties(Stack_t* object_path_1, Stack_t* object
 }
 
 
-static TreeStatus printUniqueProperties(Stack_t* object_path)
+static TreeStatus printUniqueProperties(Stack_t* object_path, const char* data)
 {
     assert(object_path); assert(object_path->data);
 
@@ -85,37 +89,43 @@ static TreeStatus printUniqueProperties(Stack_t* object_path)
     StackError error = stackPop(object_path, &step);
     RETURN_IF_STACK_ERROR(error);
 
+    printf("%s ", data);
     while (step.answer != ANSWER_NONE) {
         assert(step.answer != ANSWER_YES || step.answer != ANSWER_NO);
         if (step.answer == ANSWER_YES)
-            printf("%s\n", step.node->data);
+            printf(WHITE("%s"), step.node->data);
         else
-            printf("not %s\n", step.node->data);
+            printf(WHITE("not %s"), step.node->data);
 
         error = stackPop(object_path, &step);
         RETURN_IF_STACK_ERROR(error);
+        if (step.answer != ANSWER_NONE)
+            printf(", ");
     }
+    printf(". ");
 
     return TREE_OK;
 }
 
 
-static TreeStatus printNodesComparision(Stack_t* object_path_1, Stack_t* object_path_2)
+static TreeStatus printNodesComparision(Stack_t* object_path_1, Stack_t* object_path_2,
+                                        const char* data_1, const char* data_2)
 {
     assert(object_path_1); assert(object_path_2);
     assert(object_path_1->data); assert(object_path_2->data);
 
-    printf("What both nodes have in common:\n");
+   // printf("General properties of both objects:\n");
     TreeStatus status = printGeneralProperties(object_path_1, object_path_2);
     RETURN_IF_NOT_OK(status);
 
-    printf("\nProperties of 1 object:\n");        
-    status = printUniqueProperties(object_path_1);
+   // printf("\nUnique properties of 1 object:\n");        
+    status = printUniqueProperties(object_path_1, data_1);
     RETURN_IF_NOT_OK(status);
 
-    printf("\nProperties of 2 object:\n");
-    status = printUniqueProperties(object_path_2);
+   // printf("\nUnique properties of 2 object:\n");
+    status = printUniqueProperties(object_path_2, data_2);
     RETURN_IF_NOT_OK(status);
+    printf("\n");
 
     return TREE_OK;
 }
@@ -145,9 +155,7 @@ TreeStatus compareNodes(BinaryTree* tree, const char* data_1, const char* data_2
 
     printf(CYAN("\nComparison of nodes '") WHITE("%s") CYAN("' and '") WHITE("%s")
            CYAN("'\n"), data_1, data_2);
-    TreeStatus status = printNodesComparision(&stack_1, &stack_2);
-
-    sleep(3);
+    TreeStatus status = printNodesComparision(&stack_1, &stack_2, data_1, data_2);
 
     error = stackDtor(&stack_1);
     RETURN_IF_STACK_ERROR(error);
@@ -176,9 +184,8 @@ TreeStatus defineNode(BinaryTree* tree, const char* data)
     }
 
     printf(CYAN("\nNode '") WHITE("%s") CYAN("' definition:\n"), data);
-    status = printUniqueProperties(&stack);
-    
-    sleep(2); 
+    status = printUniqueProperties(&stack, data);
+    printf("\n");
     
     error = stackDtor(&stack);
     RETURN_IF_STACK_ERROR(error);
