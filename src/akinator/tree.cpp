@@ -163,7 +163,7 @@ static TreeStatus akinatorAddElement(BinaryTree* tree, Node* node, char* new_dat
 {
     assert(tree); assert(node); assert(new_data); assert(different_data);
 
-    TREE_VERIFY(tree, "Add new object");
+    TREE_VERIFY(tree, "Adding new object");
 
     TreeStatus status = createNode(&node->left);
     RETURN_IF_NOT_OK(status);
